@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.Instant;
 
@@ -15,5 +16,10 @@ public class ControllerExceptionHandler {
     public ResponseEntity<StandardError> hymnException(HttpServletRequest request, HymnException exception){
         StandardError standardError = new StandardError(Instant.now(), request.getRequestURI(),  "Recurso não encontrado", exception.getMessage(), HttpStatus.NOT_FOUND.toString());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(standardError);
+    }
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<StandardError> mismatchException(HttpServletRequest request, MethodArgumentTypeMismatchException exception){
+        StandardError standardError = new StandardError(Instant.now(), request.getRequestURI(),  "Argumento inválido", exception.getMessage(), HttpStatus.BAD_REQUEST.toString());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
     }
 }
