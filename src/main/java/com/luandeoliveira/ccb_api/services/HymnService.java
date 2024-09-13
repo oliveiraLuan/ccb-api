@@ -6,6 +6,7 @@ import com.luandeoliveira.ccb_api.services.exceptions.HymnException;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static java.lang.StringTemplate.STR;
@@ -22,7 +23,7 @@ public class HymnService {
             ObjectMapper mapper = new ObjectMapper();
             hymn  = mapper.readValue(new File(path + STR."\{hymnNumber}.json"), Hymn.class);
         } catch (IOException e){
-            e.printStackTrace();
+            throw new HymnException(STR."Hino \{hymnNumber} não encontrado.");
         }
         return hymn;
     }
