@@ -1,6 +1,7 @@
 package com.luandeoliveira.ccb_api.controllers;
 
 import com.luandeoliveira.ccb_api.services.HymnService;
+import com.luandeoliveira.ccb_api.services.exceptions.HymnException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @WebMvcTest(HymnController.class)
 class HymnControllerTest {
-    private Integer existingId;
+    private Integer existingNumber;
+    private Integer nonExistingNumber;
+    private static final String path = "/hymns/{number}";
+    private String invalidArgument;
 
     @Autowired
     private MockMvc mockMvc;
@@ -26,19 +30,30 @@ class HymnControllerTest {
 
     @BeforeEach
     public void setUp(){
-        existingId = 1;
-        when(hymnService.findByNumber(existingId)).thenReturn(HymnFactory.createHymn());
+        existingNumber = 1;
+        nonExistingNumber = 500;
+        invalidArgument = "abc";
+        when(hymnService.findByNumber(existingNumber)).thenReturn(HymnFactory.createHymn());
+        when(hymnService.findByNumber(nonExistingNumber)).thenThrow(HymnException.class);
     }
 
     @Test
     void findByNumberShouldReturnHymnWhenHymnNumberExists() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get("/hymns/1", existingId).accept(MediaType.APPLICATION_JSON));
+        ResultActions resultActions = mockMvc.perform(get(path, existingNumber).accept(MediaType.APPLICATION_JSON));
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(jsonPath("$.number").exists());
         resultActions.andExpect(jsonPath("$.title").exists());
         resultActions.andExpect(jsonPath("$.lyrics").exists());
         resultActions.andExpect(jsonPath("$.songwriter").exists());
     }
-
-
+    @Test
+    void findByNumberShouldThrowHymnExceptionWhenNumberDoesNotExists() throws Exception {
+        ResultActions resultActions = mockMvc.perform(get(path, nonExistingNumber).accept(MediaType.APPLICATION_JSON));
+        resultActions.andExpect(status().isNotFound());
+    }
+    @Test
+    void findByNumberShouldThrowMismatchExceptionWhenArgumentInvalid() throws Exception {
+        ResultActions resultActions = mockMvc.perform(get(path, invalidArgument).accept(MediaType.APPLICATION_JSON));
+        resultActions.andExpect(status().isBadRequest());
+    }
 }
