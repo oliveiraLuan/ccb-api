@@ -28,6 +28,11 @@ class HymnServiceTest {
     }
 
     @Test
+    void findByNumberShouldThrowHymnExceptionWhenHymnIsNull(){
+        assertThrows(HymnException.class, () -> service.findByNumber(null));
+    }
+
+    @Test
     void findByNumberShouldThrowHymnExceptionWhenHymnDoesNotExists(){
         Integer nonExistentHymn = 500;
         assertThrows(HymnException.class, () -> service.findByNumber(nonExistentHymn));
