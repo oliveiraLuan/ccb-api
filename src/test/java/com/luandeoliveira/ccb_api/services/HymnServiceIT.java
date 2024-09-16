@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class HymnServiceTest {
+class HymnServiceIT {
     @InjectMocks
     private HymnService service;
 
