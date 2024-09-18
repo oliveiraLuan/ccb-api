@@ -6,7 +6,6 @@ import com.luandeoliveira.ccb_api.services.exceptions.HymnException;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static java.lang.StringTemplate.STR;
