@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -17,7 +19,7 @@ class HymnServiceIT {
     private HymnService service;
 
     @Test
-    void findByNumberShouldReturnHymnWhenHymnExists(){
+    void findByNumberShouldReturnHymnWhenHymnExists() throws IOException {
         Hymn hymn = new Hymn(1, "Cristo, meu Mestre...", "", new Songwriter("Leila Taylor Morris"));
         Hymn expectedHymn = service.findByNumber(2);
 
